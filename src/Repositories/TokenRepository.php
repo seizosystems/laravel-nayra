@@ -23,16 +23,9 @@ class TokenRepository implements TokenRepositoryInterface
 {
     public $persistCalls = 0;
 
-    /**
-     * Create a token instance.
-     *
-     * @return TokenInterface
-     */
-    public function createTokenInstance()
+    public function createTokenInstance(): TokenInterface
     {
-        $token = new Token();
-
-        return $token;
+        return new Token();
     }
 
     /**

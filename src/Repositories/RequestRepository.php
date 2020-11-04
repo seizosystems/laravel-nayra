@@ -8,12 +8,12 @@ use Viezel\Nayra\Models\Request;
 
 class RequestRepository implements RequestRepositoryInterface
 {
-    public function find($id)
+    public function find($id): ?Request
     {
         return Request::find($id);
     }
 
-    public function make(array $data)
+    public function make(array $data): ?Request
     {
         return Request::make($data);
     }

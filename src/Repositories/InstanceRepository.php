@@ -40,7 +40,6 @@ class InstanceRepository implements ExecutionInstanceRepositoryInterface
         $instance->setOwnerDocument($process->getOwnerDocument());
         $process->getTransitions($storage->getFactory());
 
-        //Load tokens:
         foreach ($data->tokens as $tokenInfo) {
             $token = $storage->getFactory()->getTokenRepository()->createTokenInstance();
             $token->setProperties($tokenInfo);
@@ -51,11 +50,6 @@ class InstanceRepository implements ExecutionInstanceRepositoryInterface
         return $instance;
     }
 
-    /**
-     * Save an instance
-     *
-     * @param ExecutionInstanceInterface $instance
-     */
     public function saveProcessInstance(ExecutionInstanceInterface $instance, $bpmn)
     {
         $id = $instance->getId();
