@@ -1,8 +1,9 @@
 <?php
+declare(strict_types=1);
 
-namespace ProcessMaker\Laravel\Nayra\ScriptFormats;
+namespace Viezel\Nayra\Nayra\ScriptFormats;
 
-use ProcessMaker\Laravel\Nayra\ScriptTask;
+use Viezel\Nayra\Nayra\ScriptTask;
 
 class PhpScript extends BaseScriptExecutor
 {
@@ -20,6 +21,7 @@ class PhpScript extends BaseScriptExecutor
         $closure = function (ScriptTask $scriptTask, $model) use ($self) {
             return require $self->filename;
         };
+
         return $closure->call($scriptTask, $scriptTask, $model);
     }
 }

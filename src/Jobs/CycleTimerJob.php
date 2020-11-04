@@ -1,6 +1,7 @@
 <?php
+declare(strict_types=1);
 
-namespace ProcessMaker\Laravel\Jobs;
+namespace Viezel\Nayra\Jobs;
 
 use DateTime;
 use Illuminate\Bus\Queueable;
@@ -8,16 +9,19 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use ProcessMaker\Laravel\Facades\Nayra;
 use ProcessMaker\Nayra\Contracts\Bpmn\EventInterface;
 use ProcessMaker\Nayra\Contracts\Bpmn\FlowElementInterface;
 use ProcessMaker\Nayra\Contracts\Bpmn\TimerEventDefinitionInterface;
 use ProcessMaker\Nayra\Contracts\Bpmn\TokenInterface;
 use ProcessMaker\Nayra\Contracts\Engine\JobManagerInterface;
+use Viezel\Nayra\Facades\Nayra;
 
 class CycleTimerJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     public $cycle;
     public $elementId;
@@ -87,6 +91,7 @@ class CycleTimerJob implements ShouldQueue
     {
         $xpath = new DOMXPath($dom);
         $nodes = $xpath->query($this->eventDefinitionPath);
+
         return $nodes ? $nodes->item(0)->getBpmnElementInstance() : null;
     }
 
@@ -104,6 +109,7 @@ class CycleTimerJob implements ShouldQueue
         $interval = $this->loadTimerFromJson($timer->interval);
         $end = $timer->end ? $this->loadTimerFromJson($timer->end) : null;
         $recurrences = $timer->recurrences;
+
         return new DatePeriod($start, $interval, [$end, $recurrences - 1]);
     }
 }

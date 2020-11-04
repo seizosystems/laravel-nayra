@@ -1,16 +1,17 @@
 <?php
+declare(strict_types=1);
 
-namespace ProcessMaker\Laravel\Nayra;
+namespace Viezel\Nayra\Nayra;
 
 use Exception;
 use Illuminate\Support\Facades\Log;
-use ProcessMaker\Laravel\Models\Process as Model;
-use ProcessMaker\Laravel\Nayra\ScriptFormats\BaseScriptExecutor;
-use ProcessMaker\Laravel\Nayra\ScriptFormats\BashScript;
-use ProcessMaker\Laravel\Nayra\ScriptFormats\PhpScript;
 use ProcessMaker\Nayra\Bpmn\Models\ScriptTask as ScriptTaskBase;
 use ProcessMaker\Nayra\Contracts\Bpmn\ActivityInterface;
 use ProcessMaker\Nayra\Contracts\Bpmn\TokenInterface;
+use Viezel\Nayra\Models\Process as Model;
+use Viezel\Nayra\Nayra\ScriptFormats\BaseScriptExecutor;
+use Viezel\Nayra\Nayra\ScriptFormats\BashScript;
+use Viezel\Nayra\Nayra\ScriptFormats\PhpScript;
 
 /**
  * This activity will raise an exception when executed.
@@ -58,13 +59,15 @@ class ScriptTask extends ScriptTaskBase
         try {
             $response = $this->runCode($this->model, $script, $format);
             if (is_array($response)) {
-                foreach($response as $key => $value) {
+                foreach ($response as $key => $value) {
                     $token->getInstance()->getDataStore()->putData($key, $value);
                 }
             }
+
             return true;
         } catch (Exception $e) {
             Log::error($e->getMessage());
+
             return false;
         }
     }
@@ -92,19 +95,21 @@ class ScriptTask extends ScriptTaskBase
     private function scriptFactory($format)
     {
         $class = self::scriptFormats[$format];
+
         return new $class;
     }
 
     /**
      * Set the model of the process instance
      *
-     * @param \ProcessMaker\Laravel\Models\Process $model
+     * @param \Viezel\Nayra\Models\Process $model
      *
      * @return self
      */
     public function setModel(Model $model)
     {
         $this->model = $model;
+
         return $this;
     }
 }

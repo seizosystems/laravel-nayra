@@ -1,11 +1,14 @@
 <?php
+declare(strict_types=1);
 
-namespace ProcessMaker\Laravel\Models;
+namespace Viezel\Nayra\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Request extends Model
 {
+    protected $table = 'bpmn_requests';
+
     protected $guarded = [];
 
     protected $casts = [

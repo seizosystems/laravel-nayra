@@ -11,4 +11,4 @@
 /.github            export-ignore
 /psalm.xml          export-ignore
 /psalm.xml.dist     export-ignore
-/bpmn               export-ignore
+/docs               export-ignore

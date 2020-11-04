@@ -1,28 +1,21 @@
 <?php
+declare(strict_types=1);
 
-namespace ProcessMaker\Laravel\Nayra;
+namespace Viezel\Nayra\Nayra;
 
 use ProcessMaker\Nayra\Bpmn\ActivitySubProcessTrait;
 use ProcessMaker\Nayra\Bpmn\Events\ActivityActivatedEvent;
 use ProcessMaker\Nayra\Bpmn\Events\ActivityClosedEvent;
 use ProcessMaker\Nayra\Bpmn\Events\ActivityCompletedEvent;
 use ProcessMaker\Nayra\Contracts\Bpmn\ActivityInterface;
+use ProcessMaker\Nayra\Contracts\Bpmn\CallableElementInterface;
 use ProcessMaker\Nayra\Contracts\Bpmn\CallActivityInterface;
 
-/**
- * This activity will raise an exception when executed.
- *
- */
 class CallActivity implements CallActivityInterface
 {
     use ActivitySubProcessTrait;
 
-    /**
-     * Array map of custom event classes for the bpmn element.
-     *
-     * @return array
-     */
-    protected function getBpmnEventClasses()
+    protected function getBpmnEventClasses(): array
     {
         return [
             ActivityInterface::EVENT_ACTIVITY_ACTIVATED => ActivityActivatedEvent::class,
@@ -31,26 +24,15 @@ class CallActivity implements CallActivityInterface
         ];
     }
 
-    /**
-     * Get the called element by the activity.
-     *
-     * @return \ProcessMaker\Nayra\Contracts\Bpmn\CallableElementInterface
-     */
-    public function getCalledElement()
+    public function getCalledElement(): CallableElementInterface
     {
         return $this->getProperty(CallActivityInterface::BPMN_PROPERTY_CALLED_ELEMENT);
     }
 
-    /**
-     * Set the called element by the activity.
-     *
-     * @param \ProcessMaker\Nayra\Contracts\Bpmn\CallableElementInterface|string $callableElement
-     *
-     * @return $this
-     */
-    public function setCalledElement($callableElement)
+    public function setCalledElement($callableElement): self
     {
         $this->setProperty(CallActivityInterface::BPMN_PROPERTY_CALLED_ELEMENT, $callableElement);
+
         return $this;
     }
 }

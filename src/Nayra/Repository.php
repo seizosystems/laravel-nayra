@@ -1,6 +1,7 @@
 <?php
+declare(strict_types=1);
 
-namespace ProcessMaker\Laravel\Nayra;
+namespace Viezel\Nayra\Nayra;
 
 use ProcessMaker\Nayra\Contracts\Repositories\ExecutionInstanceRepositoryInterface;
 use ProcessMaker\Nayra\Contracts\Repositories\TokenRepositoryInterface;

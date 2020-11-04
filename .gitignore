@@ -4,6 +4,12 @@ vendor
 package.json
 composer.lock
 package-lock.json
+.php_cs.cache
+.phpunit.result.cache
+build
+coverage
+phpunit.xml
+psalm.xml
 
 # local env files
 .env.local

@@ -1,33 +1,55 @@
 {
-    "name": "processmaker/laravel-nayra",
-    "description": "Laravel driver for Nayra",
-    "type": "library",
+    "name": "viezel/nayra",
+    "description": "Laravel for ProcessMaker Nayra",
+    "homepage": "https://github.com/viezel/otp",
+    "keywords": [
+        "ProcessMaker",
+        "Nayra",
+        "Laravel",
+        "BPMN"
+    ],
     "license": "MIT",
-    "version": "0.0.1",
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-      "autoload": {
+    "require": {
+        "php": "^7.4|^8.0",
+        "ext-dom": "*",
+        "illuminate/contracts": "^8.0",
+        "processmaker/nayra": "^1.1"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.16",
+        "orchestra/testbench": "^6.0",
+        "phpunit/phpunit": "^9.3",
+        "vimeo/psalm": "^3.11"
+    },
+    "autoload": {
         "psr-4": {
-            "ProcessMaker\\Laravel\\": "src/"
+            "Viezel\\Nayra\\": "src/"
         }
     },
-    "authors": [
-        {
-            "name": "David Callizaya",
-            "email": "david.callizaya@processmaker.com"
+    "autoload-dev": {
+        "psr-4": {
+            "Viezel\\Nayra\\Tests\\": "tests"
         }
-    ],
+    },
+    "scripts": {
+        "psalm": "vendor/bin/psalm",
+        "test": "vendor/bin/phpunit --colors=always",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage",
+        "format": "vendor/bin/php-cs-fixer fix --allow-risky=yes"
+    },
+    "config": {
+        "sort-packages": true
+    },
     "extra": {
         "laravel": {
             "providers": [
-                "ProcessMaker\\Laravel\\Providers\\PackageServiceProvider"
+                "NayraServiceProvider"
             ],
             "aliases": {
-                "Nayra": "ProcessMaker\\Laravel\\Providers\\Nayra"
+                "Nayra": "Viezel\\Nayra\\Providers\\Nayra"
             }
         }
     },
-    "require": {
-        "processmaker/nayra": "dev-master"
-    }
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

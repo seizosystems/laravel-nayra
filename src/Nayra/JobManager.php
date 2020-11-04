@@ -1,10 +1,8 @@
 <?php
+declare(strict_types=1);
 
-namespace ProcessMaker\Laravel\Nayra;
+namespace Viezel\Nayra\Nayra;
 
-use ProcessMaker\Laravel\Facades\Nayra;
-use ProcessMaker\Laravel\Jobs\CycleTimerJob;
-use ProcessMaker\Laravel\Jobs\TimerJob;
 use ProcessMaker\Nayra\Bpmn\Models\DatePeriod;
 use ProcessMaker\Nayra\Contracts\Bpmn\EntityInterface;
 use ProcessMaker\Nayra\Contracts\Bpmn\FlowElementInterface;
@@ -12,6 +10,9 @@ use ProcessMaker\Nayra\Contracts\Bpmn\TimerEventDefinitionInterface;
 use ProcessMaker\Nayra\Contracts\Bpmn\TokenInterface;
 use ProcessMaker\Nayra\Contracts\Engine\JobManagerInterface;
 use ProcessMaker\Nayra\Engine\JobManagerTrait;
+use Viezel\Nayra\Facades\Nayra;
+use Viezel\Nayra\Jobs\CycleTimerJob;
+use Viezel\Nayra\Jobs\TimerJob;
 
 class JobManager implements JobManagerInterface
 {

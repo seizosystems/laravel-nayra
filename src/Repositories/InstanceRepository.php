@@ -1,13 +1,14 @@
 <?php
+declare(strict_types=1);
 
-namespace ProcessMaker\Laravel\Repositories;
+namespace Viezel\Nayra\Repositories;
 
-use ProcessMaker\Laravel\Contracts\RequestRepositoryInterface;
 use ProcessMaker\Nayra\Contracts\Bpmn\ParticipantInterface;
 use ProcessMaker\Nayra\Contracts\Engine\ExecutionInstanceInterface;
 use ProcessMaker\Nayra\Contracts\Repositories\ExecutionInstanceRepositoryInterface;
 use ProcessMaker\Nayra\Contracts\Repositories\StorageInterface;
 use ProcessMaker\Nayra\Engine\ExecutionInstance;
+use Viezel\Nayra\Contracts\RequestRepositoryInterface;
 
 class InstanceRepository implements ExecutionInstanceRepositoryInterface
 {
@@ -20,6 +21,7 @@ class InstanceRepository implements ExecutionInstanceRepositoryInterface
     {
         $this->requestRepository = $requestRepository;
     }
+
     /**
      * Load an execution instance from a persistent storage.
      *
@@ -48,6 +50,7 @@ class InstanceRepository implements ExecutionInstanceRepositoryInterface
             $element = $storage->getElementInstanceById($tokenInfo['element']);
             $element->addToken($instance, $token);
         }
+
         return $instance;
     }
 
@@ -60,7 +63,7 @@ class InstanceRepository implements ExecutionInstanceRepositoryInterface
     {
         $id = $instance->getId();
         $processData = $this->requestRepository->find($id);
-        if (!$processData) {
+        if (! $processData) {
             $processData = $this->requestRepository->make([
                 'process_id' => $instance->getProcess()->getId(),
                 'bpmn' => $bpmn,

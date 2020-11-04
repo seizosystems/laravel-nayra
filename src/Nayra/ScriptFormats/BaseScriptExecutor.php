@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=1);
 
-namespace ProcessMaker\Laravel\Nayra\ScriptFormats;
+namespace Viezel\Nayra\Nayra\ScriptFormats;
 
-use ProcessMaker\Laravel\Nayra\ScriptTask;
 use Exception;
+use Viezel\Nayra\Nayra\ScriptTask;
 
 abstract class BaseScriptExecutor
 {
@@ -43,13 +44,16 @@ abstract class BaseScriptExecutor
     public function run(ScriptTask $scriptTask, $model, $script)
     {
         file_put_contents($this->filename, $script);
+
         try {
             $__response = $this->runFile($scriptTask, $model);
         } catch (Exception $exception) {
             file_exists($this->filename) ? unlink($this->filename) : null;
+
             throw $exception;
         }
         file_exists($this->filename) ? unlink($this->filename) : null;
+
         return $__response;
     }
 }

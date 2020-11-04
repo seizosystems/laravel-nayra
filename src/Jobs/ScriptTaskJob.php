@@ -1,18 +1,22 @@
 <?php
+declare(strict_types=1);
 
-namespace ProcessMaker\Laravel\Jobs;
+namespace Viezel\Nayra\Jobs;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use ProcessMaker\Laravel\Facades\Nayra;
 use ProcessMaker\Nayra\Contracts\Bpmn\TokenInterface;
+use Viezel\Nayra\Facades\Nayra;
 
 class ScriptTaskJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     protected $tokenId;
     protected $instanceId;

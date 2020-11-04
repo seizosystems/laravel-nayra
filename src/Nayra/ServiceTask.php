@@ -1,6 +1,7 @@
 <?php
+declare(strict_types=1);
 
-namespace ProcessMaker\Laravel\Nayra;
+namespace Viezel\Nayra\Nayra;
 
 use Illuminate\Support\Facades\Log;
 use ProcessMaker\Nayra\Bpmn\Models\ServiceTask as BaseServiceTask;
@@ -21,10 +22,10 @@ class ServiceTask extends BaseServiceTask
         //if the script runs correctly complete te activity, otherwise set the token to failed state
         if ($this->executeService($token, $this->getImplementation())) {
             $this->complete($token);
-        }
-        else {
+        } else {
             $token->setStatus(ActivityInterface::TOKEN_STATE_FAILING);
         }
+
         return $this;
     }
     
@@ -46,12 +47,10 @@ class ServiceTask extends BaseServiceTask
             }
 
             return call_user_func($implementation);
-        }
-        catch (\Exception $exception) {
+        } catch (\Exception $exception) {
             Log::error($exception->getMessage());
         }
 
         return false;
     }
-
 }

@@ -1,13 +1,14 @@
 <?php
+declare(strict_types=1);
 
-namespace ProcessMaker\Laravel\Facades;
+namespace Viezel\Nayra\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
  * Workflow Manager Facade
  *
- * @see \ProcessMaker\Laravel\Nayra\Manager
+ * @see \Viezel\Nayra\Nayra\Manager
  *
  * @method static \ProcessMaker\Nayra\Contracts\Engine\ExecutionInstanceInterface cancelProcess(string $instanceId)
  * @method static \ProcessMaker\Nayra\Contracts\Engine\ExecutionInstanceInterface startProcess(string $processURL, string $eventId, array $data)

@@ -1,12 +1,9 @@
 <?php
+declare(strict_types=1);
 
-namespace ProcessMaker\Laravel\Nayra;
+namespace Viezel\Nayra\Nayra;
 
-use ProcessMaker\Laravel\Contracts\RequestRepositoryInterface;
-use ProcessMaker\Laravel\Jobs\ScriptTaskJob;
-use ProcessMaker\Laravel\Jobs\ServiceTaskJob;
-use ProcessMaker\Laravel\Models\Process;
-use ProcessMaker\Laravel\Repositories\InstanceRepository;
+use ProcessMaker\Nayra\Contracts\Bpmn\CollectionInterface;
 use ProcessMaker\Nayra\Contracts\Bpmn\ProcessInterface;
 use ProcessMaker\Nayra\Contracts\Bpmn\ScriptTaskInterface;
 use ProcessMaker\Nayra\Contracts\Bpmn\ServiceTaskInterface;
@@ -15,26 +12,30 @@ use ProcessMaker\Nayra\Contracts\Engine\ExecutionInstanceInterface;
 use ProcessMaker\Nayra\Contracts\Engine\JobManagerInterface;
 use ProcessMaker\Nayra\Engine\ExecutionInstance;
 use ProcessMaker\Nayra\Storage\BpmnDocument;
+use Viezel\Nayra\Contracts\RequestRepositoryInterface;
+use Viezel\Nayra\Jobs\ScriptTaskJob;
+use Viezel\Nayra\Jobs\ServiceTaskJob;
+use Viezel\Nayra\Repositories\InstanceRepository;
 
 class Manager
 {
     /**
-     * @var Repository $repository
+     * @var Repository
      */
     private $repository;
 
     /**
-     * @var \ProcessMaker\Nayra\Contracts\EventBusInterface $dispatcher
+     * @var \ProcessMaker\Nayra\Contracts\EventBusInterface
      */
     private $dispatcher;
 
     /**
-     * @var Engine $engine
+     * @var Engine
      */
     private $engine;
 
     /**
-     * @var BpmnDocument $bpmnRepository
+     * @var BpmnDocument
      */
     private $bpmnRepository;
 
@@ -44,7 +45,7 @@ class Manager
     private $instanceRepository;
 
     /**
-     * @var string $bpmn
+     * @var string
      */
     private $bpmn;
 
@@ -52,6 +53,11 @@ class Manager
      * @var RequestRepositoryInterface
      */
     private $requestRepository;
+
+    /**
+     * @var \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private $jobManager;
 
     public function __construct(RequestRepositoryInterface $requestRepository)
     {
@@ -91,18 +97,19 @@ class Manager
         $instance = $process->call($dataStorage);
         $this->engine->runToNextState();
         $this->saveState();
+
         return $instance;
     }
 
     /**
      * Start a process by start event
      *
-     * @param strin $processURL
+     * @param string $processURL
      * @param string $eventId
      * @param array $data
      * @return ExecutionInstanceInterface
      */
-    public function startProcess($processURL, $eventId, $data = [])
+    public function startProcess($processURL, $eventId, $data = []): ExecutionInstanceInterface
     {
         $this->prepare();
         //Process
@@ -120,15 +127,11 @@ class Manager
 
         $this->engine->runToNextState();
         $this->saveState();
+
         return $instance;
     }
 
-    /**
-     * Get the list of tasks.
-     *
-     * @return type
-     */
-    public function tasks($instanceId)
+    public function tasks($instanceId): CollectionInterface
     {
         $this->prepare();
         // Load the execution data
@@ -209,6 +212,7 @@ class Manager
 
         //Return the instance id
         $instance = $this->engine->loadExecutionInstance($instanceId, $this->bpmnRepository);
+
         return $instance;
     }
 
@@ -285,6 +289,7 @@ class Manager
         $this->bpmnRepository->load($filename);
         $this->bpmn = $filename;
         $process = $this->bpmnRepository->getElementsByTagName('process')->item(0)->getBpmnElementInstance();
+
         return $process;
     }
 
@@ -300,6 +305,7 @@ class Manager
     {
         $processData = $this->requestRepository->find($instanceId);
         $this->loadProcess($processData->bpmn);
+
         return $processData;
     }
 
@@ -352,6 +358,7 @@ class Manager
     public function saveProcessInstance(ExecutionInstanceInterface $instance)
     {
         $this->instanceRepository->saveProcessInstance($instance, $this->bpmn);
+
         return $this;
     }
 }

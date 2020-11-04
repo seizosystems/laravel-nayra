@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=1);
 
-namespace ProcessMaker\Laravel\Repositories;
+namespace Viezel\Nayra\Repositories;
 
-use ProcessMaker\Laravel\Contracts\RequestRepositoryInterface;
-use ProcessMaker\Laravel\Models\Request;
+use Viezel\Nayra\Contracts\RequestRepositoryInterface;
+use Viezel\Nayra\Models\Request;
 
 class RequestRepository implements RequestRepositoryInterface
 {

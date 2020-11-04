@@ -1,6 +1,7 @@
 <?php
+declare(strict_types=1);
 
-namespace ProcessMaker\Laravel\Nayra;
+namespace Viezel\Nayra\Nayra;
 
 use DateInterval;
 use DatePeriod;
@@ -9,10 +10,6 @@ use Exception;
 use ProcessMaker\Nayra\Bpmn\FormalExpressionTrait;
 use ProcessMaker\Nayra\Contracts\Bpmn\FormalExpressionInterface;
 
-/**
- * FormalExpression implementation
- *
- */
 class FormalExpression implements FormalExpressionInterface
 {
     use FormalExpressionTrait;
@@ -57,57 +54,49 @@ class FormalExpression implements FormalExpressionInterface
     public function __invoke($data)
     {
         extract($data);
+
         return $this->getDateExpression()
             ?: $this->getCycleExpression()
             ?: $this->getDurationExpression()
             ?: eval('return ' . $this->getBody() . ';');
     }
 
-    /**
-     * Verify if the expression is a date.
-     *
-     * @return boolean
-     */
-    private function isDateExpression()
+    private function isDateExpression(): bool
     {
         $expression = $this->getProperty(FormalExpressionInterface::BPMN_PROPERTY_BODY);
+
         try {
             $date = new DateTime($expression);
         } catch (Exception $e) {
             return false;
         }
+
         return $date !== false;
     }
 
-    /**
-     * Verify if the expression is a cycle.
-     *
-     * @return boolean
-     */
-    private function isCycleExpression()
+    private function isCycleExpression(): bool
     {
         $expression = $this->getProperty(FormalExpressionInterface::BPMN_PROPERTY_BODY);
+
         try {
             $cycle = new DatePeriod($expression);
         } catch (Exception $e) {
             return false;
         }
-        return $cycle !== false;
+
+        return true;
     }
 
-    /**
-     * Verify if the expression is a duration.
-     *
-     * @return boolean
-     */
-    private function isDurationExpression()
+    private function isDurationExpression(): bool
     {
         $expression = $this->getProperty(FormalExpressionInterface::BPMN_PROPERTY_BODY);
+
         try {
             $interval = new DateInterval($expression);
         } catch (Exception $e) {
             return false;
         }
-        return $interval !== false;
+
+        return true;
     }
 }

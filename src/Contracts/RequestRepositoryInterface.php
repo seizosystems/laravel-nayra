@@ -1,5 +1,7 @@
 <?php
-namespace ProcessMaker\Laravel\Contracts;
+declare(strict_types=1);
+
+namespace Viezel\Nayra\Contracts;
 
 interface RequestRepositoryInterface
 {
