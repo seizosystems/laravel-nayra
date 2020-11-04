@@ -12,10 +12,7 @@ use Viezel\Nayra\Contracts\RequestRepositoryInterface;
 
 class InstanceRepository implements ExecutionInstanceRepositoryInterface
 {
-    /**
-     * @var RequestRepositoryInterface
-     */
-    private $requestRepository;
+    private RequestRepositoryInterface $requestRepository;
 
     public function __construct(RequestRepositoryInterface $requestRepository)
     {
