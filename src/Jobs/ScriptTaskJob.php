@@ -21,23 +21,12 @@ class ScriptTaskJob implements ShouldQueue
     protected $tokenId;
     protected $instanceId;
 
-    /**
-     * Create a new job instance.
-     *
-     * @param TokenInterface  $token
-     *
-     * @return void
-     */
     public function __construct(TokenInterface $token)
     {
         $this->tokenId = $token->getId();
         $this->instanceId = $token->getInstance()->getId();
     }
 
-    /**
-     * Execute the job.
-     *
-     */
     public function handle()
     {
         Nayra::executeScript($this->instanceId, $this->tokenId);

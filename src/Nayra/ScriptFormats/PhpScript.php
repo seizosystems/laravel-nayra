@@ -7,21 +7,13 @@ use Viezel\Nayra\Nayra\ScriptTask;
 
 class PhpScript extends BaseScriptExecutor
 {
-    /**
-     * Run a file with the script code
-     *
-     * @param ScriptTask $scriptTask
-     * @param mixed $model
-     *
-     * @return mixed
-     */
-    public function runFile(ScriptTask $scriptTask, $model)
+    public function runFile(ScriptTask $scriptTask)
     {
         $self = $this;
-        $closure = function (ScriptTask $scriptTask, $model) use ($self) {
+        $closure = function (ScriptTask $scriptTask) use ($self) {
             return require $self->filename;
         };
 
-        return $closure->call($scriptTask, $scriptTask, $model);
+        return $closure->call($scriptTask, $scriptTask);
     }
 }

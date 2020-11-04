@@ -54,9 +54,9 @@ class InstanceRepository implements ExecutionInstanceRepositoryInterface
     /**
      * Save an instance
      *
-     * @param ExecutionInstance $instance
+     * @param ExecutionInstanceInterface $instance
      */
-    public function saveProcessInstance(ExecutionInstance $instance, $bpmn)
+    public function saveProcessInstance(ExecutionInstanceInterface $instance, $bpmn)
     {
         $id = $instance->getId();
         $processData = $this->requestRepository->find($id);

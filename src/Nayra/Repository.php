@@ -3,6 +3,10 @@ declare(strict_types=1);
 
 namespace Viezel\Nayra\Nayra;
 
+use ProcessMaker\Nayra\Contracts\Bpmn\CallActivityInterface;
+use ProcessMaker\Nayra\Contracts\Bpmn\FormalExpressionInterface;
+use ProcessMaker\Nayra\Contracts\Bpmn\ScriptTaskInterface;
+use ProcessMaker\Nayra\Contracts\Bpmn\ServiceTaskInterface;
 use ProcessMaker\Nayra\Contracts\Repositories\ExecutionInstanceRepositoryInterface;
 use ProcessMaker\Nayra\Contracts\Repositories\TokenRepositoryInterface;
 use ProcessMaker\Nayra\Contracts\RepositoryInterface;
@@ -12,62 +16,32 @@ class Repository implements RepositoryInterface
 {
     use RepositoryTrait;
 
-    /**
-     * Create instance of FormalExpression.
-     *
-     * @return \ProcessMaker\Nayra\Contracts\Bpmn\FormalExpressionInterface
-     */
-    public function createFormalExpression()
+    public function createFormalExpression(): FormalExpressionInterface
     {
         return new FormalExpression();
     }
 
-    /**
-     * Create instance of CallActivity.
-     *
-     * @return \ProcessMaker\Nayra\Contracts\Bpmn\CallActivityInterface
-     */
-    public function createCallActivity()
+    public function createCallActivity(): CallActivityInterface
     {
         return new CallActivity();
     }
 
-    /**
-     * Create instance of ScriptTask.
-     *
-     * @return \ProcessMaker\Nayra\Contracts\Bpmn\ScriptTaskInterface
-     */
-    public function createScriptTask()
+    public function createScriptTask(): ScriptTaskInterface
     {
         return new ScriptTask();
     }
 
-    /**
-     * Create instance of ServiceTask.
-     *
-     * @return \ProcessMaker\Nayra\Contracts\Bpmn\ServiceTaskInterface
-     */
-    public function createServiceTask()
+    public function createServiceTask(): ServiceTaskInterface
     {
         return new ServiceTask();
     }
 
-    /**
-     * Create a execution instance repository.
-     *
-     * @return ExecutionInstanceRepositoryInterface
-     */
-    public function createExecutionInstanceRepository()
+    public function createExecutionInstanceRepository(): ExecutionInstanceRepositoryInterface
     {
         return app(ExecutionInstanceRepositoryInterface::class);
     }
 
-    /**
-     * Creates a TokenRepository
-     *
-     * @return \ProcessMaker\Nayra\Contracts\Repositories\TokenRepositoryInterface
-     */
-    public function getTokenRepository()
+    public function getTokenRepository(): TokenRepositoryInterface
     {
         return app(TokenRepositoryInterface::class);
     }

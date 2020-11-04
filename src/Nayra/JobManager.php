@@ -38,6 +38,8 @@ class JobManager implements JobManagerInterface
         Nayra::saveProcessInstance($token->getInstance());
         TimerJob::dispatch($eventDefinition, $element, $token)
             ->delay(new Carbon($datetime));
+
+        return $this;
     }
 
     /**
@@ -62,6 +64,8 @@ class JobManager implements JobManagerInterface
         }
         CycleTimerJob::dispatch($cycle, $element, $token, $now)
             ->delay($next);
+
+        return $this;
     }
 
     /**
@@ -84,5 +88,7 @@ class JobManager implements JobManagerInterface
         }
         TimerJob::dispatch($eventDefinition, $element, $token)
             ->delay(now()->add($duration));
+
+        return $this;
     }
 }

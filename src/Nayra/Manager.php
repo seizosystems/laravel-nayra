@@ -10,11 +10,11 @@ use ProcessMaker\Nayra\Contracts\Bpmn\ServiceTaskInterface;
 use ProcessMaker\Nayra\Contracts\Bpmn\TokenInterface;
 use ProcessMaker\Nayra\Contracts\Engine\ExecutionInstanceInterface;
 use ProcessMaker\Nayra\Contracts\Engine\JobManagerInterface;
-use ProcessMaker\Nayra\Engine\ExecutionInstance;
 use ProcessMaker\Nayra\Storage\BpmnDocument;
 use Viezel\Nayra\Contracts\RequestRepositoryInterface;
 use Viezel\Nayra\Jobs\ScriptTaskJob;
 use Viezel\Nayra\Jobs\ServiceTaskJob;
+use Viezel\Nayra\Models\Request;
 use Viezel\Nayra\Repositories\InstanceRepository;
 
 class Manager
@@ -77,7 +77,7 @@ class Manager
         $this->bpmnRepository->setFactory($this->repository);
         $this->bpmnRepository->setSkipElementsNotImplemented(true);
         $this->engine->setRepository($this->repository);
-        $this->instanceRepository = $this->repository->createExecutionInstanceRepository($this->bpmnRepository);
+        $this->instanceRepository = $this->repository->createExecutionInstanceRepository();
     }
 
     /**
@@ -88,13 +88,13 @@ class Manager
      *
      * @return ExecutionInstanceInterface
      */
-    public function callProcess($processURL, $data = [])
+    public function callProcess(string $processURL, $data = [])
     {
         $this->prepare();
         $process = $this->loadProcess($processURL);
         $dataStorage = $process->getRepository()->createDataStore();
         $dataStorage->setData($data);
-        $instance = $process->call($dataStorage);
+        $instance = $process->call();
         $this->engine->runToNextState();
         $this->saveState();
 
@@ -135,7 +135,7 @@ class Manager
     {
         $this->prepare();
         // Load the execution data
-        $this->processData = $this->loadData($this->bpmnRepository, $instanceId);
+        $processData = $this->loadData($this->bpmnRepository, $instanceId);
 
         // Process and instance
         $instance = $this->engine->loadExecutionInstance($instanceId, $this->bpmnRepository);
@@ -144,7 +144,7 @@ class Manager
     }
 
     /**
-     * @return ExecutionInstance
+     * @return ExecutionInstanceInterface|null
      */
     public function getInstanceById($instanceId)
     {
@@ -152,10 +152,7 @@ class Manager
         // Load the execution data
         $this->processData = $this->loadData($this->bpmnRepository, $instanceId);
 
-        // Process and instance
-        $instance = $this->engine->loadExecutionInstance($instanceId, $this->bpmnRepository);
-
-        return $instance;
+        return $this->engine->loadExecutionInstance($instanceId, $this->bpmnRepository);
     }
 
     /**
@@ -190,30 +187,24 @@ class Manager
         $this->engine->runToNextState();
         $this->saveState();
 
-        //Return the instance id
         return $instance;
     }
 
     /**
-     * Cancela un proceso por id de instancia.
      *
      * @param string $instanceId
      *
-     * @return ExecutionInstanceInterface
+     * @return ExecutionInstanceInterface|null
      */
     public function cancelProcess($instanceId)
     {
         $this->prepare();
-        //Load the execution data
-        $processData = $this->loadData($this->bpmnRepository, $instanceId);
 
+        $processData = $this->loadData($this->bpmnRepository, $instanceId);
         $processData->status = 'CANCELED';
         $processData->save();
 
-        //Return the instance id
-        $instance = $this->engine->loadExecutionInstance($instanceId, $this->bpmnRepository);
-
-        return $instance;
+        return $this->engine->loadExecutionInstance($instanceId, $this->bpmnRepository);
     }
 
     /**
@@ -242,12 +233,11 @@ class Manager
         $this->engine->runToNextState();
         $this->saveState();
 
-        // Return the instance id
         return $instance;
     }
 
     /**
-     * Execute a script task
+     * Execute an event
      *
      * @param string $instanceId
      * @param string $tokenId
@@ -277,29 +267,22 @@ class Manager
         return $instance;
     }
 
-    /**
-     * Carga un proceso BPMN
-     *
-     * @param string $processName
-     *
-     * @return ProcessInterface
-     */
-    private function loadProcess($filename)
+    private function loadProcess(string $filename): ProcessInterface
     {
         $this->bpmnRepository->load($filename);
         $this->bpmn = $filename;
-        $process = $this->bpmnRepository->getElementsByTagName('process')->item(0)->getBpmnElementInstance();
 
-        return $process;
+        return $this->bpmnRepository->getElementsByTagName('process')
+            ->item(0)
+            ->getBpmnElementInstance();
     }
 
     /**
-     * Carga los datos de la instancia almacenados en la BD.
      *
      * @param BpmnDocument $repository
-     * @param type $instanceId
+     * @param $instanceId
      *
-     * @return Process
+     * @return ?Request
      */
     private function loadData(BpmnDocument $repository, $instanceId)
     {
@@ -309,11 +292,7 @@ class Manager
         return $processData;
     }
 
-    /**
-     * Listen for Workflow events
-     *
-     */
-    private function registerEvents()
+    private function registerEvents(): void
     {
         $this->dispatcher->listen(
             ScriptTaskInterface::EVENT_SCRIPT_TASK_ACTIVATED,
@@ -332,12 +311,7 @@ class Manager
         );
     }
 
-    /**
-     * Save the instance state (tokens)
-     *
-     * @return void
-     */
-    private function saveState()
+    private function saveState(): void
     {
         $processes = $this->bpmnRepository->getElementsByTagNameNS(BpmnDocument::BPMN_MODEL, 'process');
         foreach ($processes as $node) {
@@ -348,14 +322,7 @@ class Manager
         }
     }
 
-    /**
-     * Save the state of the process instance
-     *
-     * @param ExecutionInstance $instance
-     *
-     * @return self
-     */
-    public function saveProcessInstance(ExecutionInstanceInterface $instance)
+    public function saveProcessInstance(ExecutionInstanceInterface $instance): self
     {
         $this->instanceRepository->saveProcessInstance($instance, $this->bpmn);
 

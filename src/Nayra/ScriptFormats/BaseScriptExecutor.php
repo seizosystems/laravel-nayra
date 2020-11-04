@@ -27,11 +27,10 @@ abstract class BaseScriptExecutor
      * Run a file with the script code
      *
      * @param ScriptTask $scriptTask
-     * @param mixed $model
      *
      * @return mixed
      */
-    abstract public function runFile(ScriptTask $scriptTask, $model);
+    abstract public function runFile(ScriptTask $scriptTask);
 
     /**
      * Run a script code
@@ -41,12 +40,12 @@ abstract class BaseScriptExecutor
      *
      * @return mixed
      */
-    public function run(ScriptTask $scriptTask, $model, $script)
+    public function run(ScriptTask $scriptTask, string $script)
     {
         file_put_contents($this->filename, $script);
 
         try {
-            $__response = $this->runFile($scriptTask, $model);
+            $__response = $this->runFile($scriptTask);
         } catch (Exception $exception) {
             file_exists($this->filename) ? unlink($this->filename) : null;
 

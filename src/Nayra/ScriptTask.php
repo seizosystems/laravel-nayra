@@ -8,33 +8,17 @@ use Illuminate\Support\Facades\Log;
 use ProcessMaker\Nayra\Bpmn\Models\ScriptTask as ScriptTaskBase;
 use ProcessMaker\Nayra\Contracts\Bpmn\ActivityInterface;
 use ProcessMaker\Nayra\Contracts\Bpmn\TokenInterface;
-use Viezel\Nayra\Models\Process as Model;
 use Viezel\Nayra\Nayra\ScriptFormats\BaseScriptExecutor;
-use Viezel\Nayra\Nayra\ScriptFormats\BashScript;
 use Viezel\Nayra\Nayra\ScriptFormats\PhpScript;
 
 class ScriptTask extends ScriptTaskBase
 {
     const scriptFormats = [
         'application/x-php' => PhpScript::class,
-        'application/x-bash' => BashScript::class,
     ];
 
-    /**
-     * Model instance for the process instance
-     *
-     * @var Process
-     */
-    private $model = null;
-
-    /**
-     * Runs the ScriptTask
-     *
-     * @param TokenInterface $token
-     */
     public function runScript(TokenInterface $token)
     {
-        //if the script runs correctly complete te activity, otherwise set the token to failed state
         if ($this->executeScript($token, $this->getScript(), $this->getScriptFormat())) {
             $this->complete($token);
         } else {
@@ -42,18 +26,10 @@ class ScriptTask extends ScriptTaskBase
         }
     }
 
-    /**
-     * Script runner fot testing purposes that just evaluates the sent php code
-     *
-     * @param TokenInterface $token
-     * @param string $script
-     *
-     * @return bool
-     */
-    private function executeScript(TokenInterface $token, $script, $format)
+    private function executeScript(TokenInterface $token, string $script, string $format): bool
     {
         try {
-            $response = $this->runCode($this->model, $script, $format);
+            $response = $this->runCode($script, $format);
             if (is_array($response)) {
                 foreach ($response as $key => $value) {
                     $token->getInstance()->getDataStore()->putData($key, $value);
@@ -68,44 +44,15 @@ class ScriptTask extends ScriptTaskBase
         }
     }
 
-    /**
-     * Run the code isolated
-     *
-     * @param Model $model
-     * @param string $__filename
-     *
-     * @return mixed
-     */
-    private function runCode($model, $script, $format)
+    private function runCode(string $script, string $format)
     {
-        return $this->scriptFactory($format)->run($this, $model, $script);
+        return $this->scriptFactory($format)->run($this, $script);
     }
 
-    /**
-     * Create a script exector for the required $format
-     *
-     * @param string $format
-     *
-     * @return BaseScriptExecutor
-     */
-    private function scriptFactory($format)
+    private function scriptFactory(string $format): BaseScriptExecutor
     {
         $class = self::scriptFormats[$format];
 
         return new $class;
-    }
-
-    /**
-     * Set the model of the process instance
-     *
-     * @param \Viezel\Nayra\Models\Process $model
-     *
-     * @return self
-     */
-    public function setModel(Model $model)
-    {
-        $this->model = $model;
-
-        return $this;
     }
 }
