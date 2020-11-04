@@ -42,6 +42,16 @@ class Repository implements RepositoryInterface
     }
 
     /**
+     * Create instance of ServiceTask.
+     *
+     * @return \ProcessMaker\Nayra\Contracts\Bpmn\ServiceTaskInterface
+     */
+    public function createServiceTask()
+    {
+        return new ServiceTask();
+    }
+
+    /**
      * Create a execution instance repository.
      *
      * @return ExecutionInstanceRepositoryInterface

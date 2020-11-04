@@ -4,10 +4,12 @@ namespace ProcessMaker\Laravel\Nayra;
 
 use ProcessMaker\Laravel\Contracts\RequestRepositoryInterface;
 use ProcessMaker\Laravel\Jobs\ScriptTaskJob;
+use ProcessMaker\Laravel\Jobs\ServiceTaskJob;
 use ProcessMaker\Laravel\Models\Process;
 use ProcessMaker\Laravel\Repositories\InstanceRepository;
 use ProcessMaker\Nayra\Contracts\Bpmn\ProcessInterface;
 use ProcessMaker\Nayra\Contracts\Bpmn\ScriptTaskInterface;
+use ProcessMaker\Nayra\Contracts\Bpmn\ServiceTaskInterface;
 use ProcessMaker\Nayra\Contracts\Bpmn\TokenInterface;
 use ProcessMaker\Nayra\Contracts\Engine\ExecutionInstanceInterface;
 use ProcessMaker\Nayra\Contracts\Engine\JobManagerInterface;
@@ -312,6 +314,14 @@ class Manager
             function (ScriptTaskInterface $scriptTask, TokenInterface $token) {
                 $this->saveProcessInstance($token->getInstance());
                 ScriptTaskJob::dispatch($token);
+            }
+        );
+
+        $this->dispatcher->listen(
+            ServiceTaskInterface::EVENT_SERVICE_TASK_ACTIVATED,
+            function (ServiceTaskInterface $serviceTask, TokenInterface $token) {
+                $this->saveProcessInstance($token->getInstance());
+                ServiceTaskJob::dispatch($token);
             }
         );
     }
