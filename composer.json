@@ -1,5 +1,5 @@
 {
-    "name": "viezel/nayra",
+    "name": "viezel/laravel-nayra",
     "description": "Laravel for ProcessMaker Nayra",
     "homepage": "https://github.com/viezel/otp",
     "keywords": [
@@ -43,7 +43,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "NayraServiceProvider"
+                "Viezel\\Nayra\\NayraServiceProvider"
             ],
             "aliases": {
                 "Nayra": "Viezel\\Nayra\\Providers\\Nayra"

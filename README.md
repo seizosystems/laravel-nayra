@@ -7,7 +7,7 @@ This is a package to initialize [ProcessMaker Nayra](https://github.com/ProcessM
 1. Install the package via composer:
 
 ```bash
-composer require viezel/nayra
+composer require viezel/laravel-nayra
 php artisan vendor:publish --provider="Viezel\Nayra\NayraServiceProvider" --tag="migrations"
 php artisan migrate
 ```
