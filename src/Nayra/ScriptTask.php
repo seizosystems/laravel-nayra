@@ -13,10 +13,6 @@ use Viezel\Nayra\Nayra\ScriptFormats\BaseScriptExecutor;
 use Viezel\Nayra\Nayra\ScriptFormats\BashScript;
 use Viezel\Nayra\Nayra\ScriptFormats\PhpScript;
 
-/**
- * This activity will raise an exception when executed.
- *
- */
 class ScriptTask extends ScriptTaskBase
 {
     const scriptFormats = [

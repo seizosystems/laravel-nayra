@@ -4,11 +4,13 @@ declare(strict_types=1);
 namespace Viezel\Nayra\Jobs;
 
 use DateTime;
+use DOMXPath;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use ProcessMaker\Nayra\Bpmn\Models\DatePeriod;
 use ProcessMaker\Nayra\Contracts\Bpmn\EventInterface;
 use ProcessMaker\Nayra\Contracts\Bpmn\FlowElementInterface;
 use ProcessMaker\Nayra\Contracts\Bpmn\TimerEventDefinitionInterface;
@@ -29,24 +31,14 @@ class CycleTimerJob implements ShouldQueue
     public $instanceId;
     public $next;
     public $tokenId;
-    public $processURL;
 
-    /**
-     * Create a new job instance.
-     *
-     * @param TokenInterface  $token
-     *
-     * @return void
-     */
     public function __construct(
-        //$processURL,
         $cycle,
         TimerEventDefinitionInterface $eventDefinition,
         FlowElementInterface $element,
         TokenInterface $token = null,
         DateTime $next
     ) {
-        //$this->processURL = $processURL;
         $this->cycle = json_encode($cycle);
         $this->elementId = $element->getId();
         $this->eventDefinitionPath = $eventDefinition->getBpmnElement()->getNodePath();
@@ -55,10 +47,6 @@ class CycleTimerJob implements ShouldQueue
         $this->tokenId = $token->getId();
     }
 
-    /**
-     * Execute the job.
-     *
-     */
     public function handle()
     {
         $instance = Nayra::getInstanceById($this->instanceId);
@@ -76,10 +64,7 @@ class CycleTimerJob implements ShouldQueue
         }
     }
 
-    /**
-     * @return DatePeriod
-     */
-    private function getCycle()
+    private function getCycle(): DatePeriod
     {
         return $this->loadTimerFromJson($this->cycle);
     }
@@ -95,15 +80,12 @@ class CycleTimerJob implements ShouldQueue
         return $nodes ? $nodes->item(0)->getBpmnElementInstance() : null;
     }
 
-    /**
-     * @return DateTime
-     */
-    private function getNext()
+    private function getNext(): DateTime
     {
         return new DateTime($this->next);
     }
 
-    private function loadTimerFromJson($timer)
+    private function loadTimerFromJson($timer): DatePeriod
     {
         $start = $timer->start ? $this->loadTimerFromJson($timer->start) : null;
         $interval = $this->loadTimerFromJson($timer->interval);

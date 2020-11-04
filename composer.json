@@ -12,6 +12,7 @@
     "require": {
         "php": "^7.4|^8.0",
         "ext-dom": "*",
+        "ext-json": "*",
         "illuminate/contracts": "^8.0",
         "processmaker/nayra": "^1.1"
     },

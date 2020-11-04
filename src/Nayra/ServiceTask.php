@@ -10,16 +10,8 @@ use ProcessMaker\Nayra\Contracts\Bpmn\TokenInterface;
 
 class ServiceTask extends BaseServiceTask
 {
-    /**
-     * Runs the Service Task
-     *
-     * @param TokenInterface $token
-     *
-     * @return \ProcessMaker\Nayra\Bpmn\Models\ServiceTask
-     */
-    public function run(TokenInterface $token)
+    public function run(TokenInterface $token): self
     {
-        //if the script runs correctly complete te activity, otherwise set the token to failed state
         if ($this->executeService($token, $this->getImplementation())) {
             $this->complete($token);
         } else {
@@ -28,16 +20,8 @@ class ServiceTask extends BaseServiceTask
 
         return $this;
     }
-    
-    /**
-     * Service Task runner for testing purposes
-     *
-     * @param TokenInterface $token
-     * @param mixed $implementation
-     *
-     * @return bool
-     */
-    private function executeService(TokenInterface $token, $implementation)
+
+    private function executeService(TokenInterface $token, $implementation): bool
     {
         try {
             if (is_string($implementation) && strpos($implementation, '@')) {

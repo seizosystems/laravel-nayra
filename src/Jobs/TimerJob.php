@@ -28,23 +28,13 @@ class TimerJob implements ShouldQueue
     public $instanceId;
     public $next;
     public $tokenId;
-    public $processURL;
 
-    /**
-     * Create a new job instance.
-     *
-     * @param TokenInterface  $token
-     *
-     * @return void
-     */
     public function __construct(
-        //$processURL,
         $cycle,
         TimerEventDefinitionInterface $eventDefinition,
         FlowElementInterface $element,
         TokenInterface $token = null
     ) {
-        //$this->processURL = $processURL;
         $this->cycle = json_encode($cycle);
         $this->elementId = $element->getId();
         $this->eventDefinitionPath = $eventDefinition->getBpmnElement()->getNodePath();
@@ -52,10 +42,6 @@ class TimerJob implements ShouldQueue
         $this->tokenId = $token->getId();
     }
 
-    /**
-     * Execute the job.
-     *
-     */
     public function handle()
     {
         $instance = Nayra::getInstanceById($this->instanceId);
@@ -63,9 +49,6 @@ class TimerJob implements ShouldQueue
         Nayra::executeEvent($this->instanceId, $this->tokenId, $eventDefinition);
     }
 
-    /**
-     * @return DatePeriod
-     */
     private function getEventDefinition(BpmnDocument $dom)
     {
         $xpath = new DOMXPath($dom);
