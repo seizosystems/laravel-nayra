@@ -22,7 +22,6 @@ class TimerJob implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    public $cycle;
     public $elementId;
     public $eventDefinitionPath;
     public $instanceId;
@@ -30,12 +29,10 @@ class TimerJob implements ShouldQueue
     public $tokenId;
 
     public function __construct(
-        $cycle,
         TimerEventDefinitionInterface $eventDefinition,
         FlowElementInterface $element,
         TokenInterface $token = null
     ) {
-        $this->cycle = json_encode($cycle);
         $this->elementId = $element->getId();
         $this->eventDefinitionPath = $eventDefinition->getBpmnElement()->getNodePath();
         $this->instanceId = $token->getInstance()->getId();

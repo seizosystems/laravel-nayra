@@ -36,7 +36,7 @@ class JobManager implements JobManagerInterface
         TokenInterface $token = null
     ) {
         Nayra::saveProcessInstance($token->getInstance());
-        TimerJob::dispatch($cycle, $eventDefinition, $element, $token)
+        TimerJob::dispatch($eventDefinition, $element, $token)
             ->delay(new Carbon($datetime));
     }
 
@@ -82,7 +82,7 @@ class JobManager implements JobManagerInterface
         if ($token) {
             Nayra::saveProcessInstance($token->getInstance());
         }
-        TimerJob::dispatch($duration, $eventDefinition, $element, $token)
+        TimerJob::dispatch($eventDefinition, $element, $token)
             ->delay(now()->add($duration));
     }
 }
