@@ -14,7 +14,7 @@
         "ext-dom": "*",
         "ext-json": "*",
         "illuminate/contracts": "^8.0",
-        "processmaker/nayra": "^1.1"
+        "processmaker/nayra": "^1.9"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.16",
