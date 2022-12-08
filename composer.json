@@ -13,7 +13,7 @@
         "php": "^7.4|^8.0",
         "ext-dom": "*",
         "ext-json": "*",
-        "illuminate/contracts": "^8.0",
+        "illuminate/contracts": "^9.0",
         "processmaker/nayra": "^1.9"
     },
     "require-dev": {
